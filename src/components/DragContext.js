@@ -1,59 +1,9 @@
 import React from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import useDrag from "../hook/useDrag";
 
 const DragContext = ({ state, setState }) => {
-  const onDragEnd = (result) => {
-    // source 이동할 아이템 destination 도착할 칼럼
-    const { source, destination } = result;
-
-    if (!destination) return;
-
-    // 칼럼 내에서 이동할때
-    if (source.droppableId === destination.droppableId) {
-      const column = state.columns[source.droppableId];
-      const newItems = Array.from(column.items);
-      const [reorderedItem] = newItems.splice(source.index, 1);
-      newItems.splice(destination.index, 0, reorderedItem);
-
-      const newState = {
-        ...state,
-        columns: {
-          ...state.columns,
-          [source.droppableId]: {
-            ...column,
-            items: newItems,
-          },
-        },
-      };
-
-      setState(newState);
-      // 다른 칼럼으로 이동할 때
-    } else {
-      const sourceColumn = state.columns[source.droppableId];
-      const destColumn = state.columns[destination.droppableId];
-      const sourceItems = Array.from(sourceColumn.items);
-      const destItems = Array.from(destColumn.items);
-      const [removedItem] = sourceItems.splice(source.index, 1);
-      destItems.splice(destination.index, 0, removedItem);
-
-      const newState = {
-        ...state,
-        columns: {
-          ...state.columns,
-          [source.droppableId]: {
-            ...sourceColumn,
-            items: sourceItems,
-          },
-          [destination.droppableId]: {
-            ...destColumn,
-            items: destItems,
-          },
-        },
-      };
-
-      setState(newState);
-    }
-  };
+  const { onDragEnd } = useDrag(state, setState, () => false);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -79,7 +29,7 @@ const DragContext = ({ state, setState }) => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className={`p-4 mb-2 ${
+                            className={`p-4 mb-2 rounded-md ${
                               snapshot.isDragging
                                 ? "bg-sky-500 text-white"
                                 : "bg-white"
