@@ -12,17 +12,14 @@ const DragContext = ({ state, setState }) => {
       return false;
     }
 
-    // 소스 아이템과 목적지 아이템을 가져옴 (목적지 아이템이 빈곳이면 null)
     const sourceItem = state.columns[source.droppableId].items[source.index];
-    const destinationItem = state.columns[destination.droppableId].items[destination.index] || null;;
+    const destinationItem = state.columns[destination.droppableId].items[destination.index];
 
-    // 소스 아이템과 목적지 아이템이 짝수인지 확인
-    const isSourceItem = parseInt(sourceItem.split(" ")[1]) % 2 === 0;
-    const isDestinationItem = destinationItem && parseInt(destinationItem.split(" ")[1]) % 2 === 0;
+    const isSourceItemEven = parseInt(sourceItem.split(" ")[1]) % 2 === 0;
+    const isDestinationItemEven = destinationItem && parseInt(destinationItem.split(" ")[1]) % 2 === 0;
 
-    // 둘다 짝수이면
-    if (isSourceItem && isDestinationItem) {
-      return false;
+    if (isSourceItemEven && isDestinationItemEven) {
+      return destination.index > source.index;
     }
 
     return true;
@@ -38,7 +35,6 @@ const DragContext = ({ state, setState }) => {
 
   // 드래그 중에 실행되는 함수
   const onDragUpdate = (update) => {
-    console.log(update)
     if (!update.destination) {
       setDragState({ isInvalid: false, column: null });
       return;
