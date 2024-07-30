@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import './index.css'
 
 function App() {
   const getItems = (count) =>
@@ -36,7 +37,7 @@ function App() {
   );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
+    <DragDropContext onDragEnd={onDragEnd} className="bg-slate-950 text-2xl">
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div
