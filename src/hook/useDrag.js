@@ -47,6 +47,16 @@ const useDrag = (state, setState, canMove = () => true, selectedItems, setSelect
 
       // 선택된 아이템들 제거
       itemsToMove.forEach(item => {
+        // 여러 칼럼에서 아이템을 제거
+        Object.keys(state.columns).forEach(columnId => {
+          if (columnId !== source.droppableId) {
+            const columnItems = state.columns[columnId].items;
+            const currentIndex = columnItems.indexOf(item);
+            if (currentIndex > -1) {
+              columnItems.splice(currentIndex, 1);
+            }
+          }
+        });
         const currentIndex = sourceItems.indexOf(item);
         if (currentIndex > -1) {
           sourceItems.splice(currentIndex, 1);
